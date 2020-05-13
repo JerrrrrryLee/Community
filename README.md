@@ -1,6 +1,5 @@
-##乌鸦社区
-
-##参考资料
+#乌鸦社区
+#参考资料
 [Spring文档](https://spring.io/guides)
 
 [Spring Web](https://spring.io/guides/gs/serving-web-content/)
@@ -11,8 +10,8 @@
 
 [GitHub OAuth](https://developer.github.com/apps/building-oauth-apps/creating-an-oauth-app/)
 
-##工具
-Spring Boot、IDEA
-
-create user if not exists sa password '123';
-alter user sa admin true;
+#工具
+Spring Boot
+IDEA
+Mybatis
+FlyWay
