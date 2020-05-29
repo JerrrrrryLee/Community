@@ -9,3 +9,12 @@ body{
     background-color: white;
     margin:30px;
 }
+.text-index{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+ }
+.media-object{
+    width: 38px;
+    height: 38px;
+}

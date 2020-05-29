@@ -56,7 +56,6 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <version>1.4.199</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -65,7 +64,12 @@
             <version>2.1.1</version>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.12</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -98,7 +102,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>6.3.0</version>
                 <configuration>
-                    <url>jdbc:h2:~/community</url>
+                    <url>jdbc:h2:/Users/lijianrui/Downloads/h2database</url>
                     <user>sa</user>
                     <password>123</password>
                 </configuration>
@@ -112,5 +116,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

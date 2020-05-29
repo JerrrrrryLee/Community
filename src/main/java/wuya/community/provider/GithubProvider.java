@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import wuya.community.dto.AccessTokenDTO;
 import wuya.community.dto.GithubUser;
 
-
 @Component
 public class GithubProvider {
     public String getAccessToken(AccessTokenDTO accessTokenDTO) {
