@@ -20,3 +20,8 @@
 ## 工具
 
 Spring Boot、BootStrap、Thymeleaf、Mybatis、Flyway、Mybatis Generator、Git、Maven
+
+```bash
+mvn flyway:migrate
+mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
+```

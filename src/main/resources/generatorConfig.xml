@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!-- 导入配置文件 -->
+    <!--<properties resource="jdbc.properties"/>-->
+
+    <!-- defaultModelType="flat" 设置复合主键时不单独为主键创建实体 -->
+    <context id="H2Tabel" defaultModelType="flat" targetRuntime="MyBatis3">
+        <!-- 生成的 Java 文件的编码 -->
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!-- 格式化 Java 代码 -->
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>
+        <!-- 格式化 XML 代码 -->
+        <property name="xmlFormatter" value="org.mybatis.generator.api.dom.DefaultXmlFormatter"/>
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <!--覆盖生成XML文件-->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+        <!-- 生成的POJO实现java.io.Serializable接口 -->
+        <!--<plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>-->
+        <!-- 生成的POJO toString方法插件 -->
+        <!--<plugin type="org.mybatis.generator.plugins.ToStringPlugin"/>-->
+        <!-- 分页 -->
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+
+        <!--optional,旨在创建class时，对注释进行控制-->
+        <!--<commentGenerator>
+            <property name="suppressDate" value="true" />
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>-->
+        <!-- 自定义注释生成器 -->
+        <!--<commentGenerator type="com.sy.ssm.plugin.MyCommentGenerator">-->
+            <!--<property name="author" value="linss"/>-->
+            <!--<property name="dateFormat" value="yyyy/MM/dd"/>-->
+            <!--<property name="addRemarkComments" value="true"/>-->
+        <!--</commentGenerator>-->
+        <!-- 数据库连接，直接通过${}jdbc.properties里的配置 -->
+        <jdbcConnection
+                driverClass="org.h2.Driver"
+                connectionURL="jdbc:h2:/Users/lijianrui/Downloads/h2database"
+                userId="sa"
+                password="123">
+            <!-- 设置 useInformationSchema 属性为 true 以便获取表的注释 -->
+            <!--<property name="useInformationSchema" value="true"/>-->
+        </jdbcConnection>
+        <!--非必须，类型处理器，在数据库类型和java类型之间的转换控制-->
+        <javaTypeResolver>
+            <!-- 默认情况下数据库中的 decimal，bigInt 在 Java 对应是 sql 下的 BigDecimal 类 -->
+            <!-- 不是 double 和 long 类型 -->
+            <!-- 使用常用的基本类型代替 sql 包下的引用类型 -->
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <!-- 生成POJO对象，并将类放到com.sy.ssm.entity.ssm包下 -->
+        <javaModelGenerator targetPackage="wuya.community.model" targetProject="src/main/java">
+            <!--enableSubPackages: value为true时，包不存在会自动创建-->
+            <property name="enableSubPackages" value="true"/>
+            <!-- 是否对modal添加构造函数 -->
+            <!--<property name="constructorBased" value="true"/>-->
+            <!-- 是否清理从数据库中查询出的字符串左右两边的空白字符 -->
+            <property name="trimStrings" value="true"/>
+            <!-- 建立model对象是否不可改变 即生成的model对象不会有setter方法，只有构造方法 -->
+            <!--<property name="immutable" value="false"/>-->
+            <!--<property name="rootClass" value="com.sy.ssm.services.vo.BaseVo"/>-->
+        </javaModelGenerator>
+        <!-- 生成mapper xml文件，并放到resources下的mapper/ssm文件夹下 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources">
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+        <!-- 生成mapper xml对应dao接口，com.sy.ssm.mapper.ssm包下-->
+        <javaClientGenerator targetPackage="wuya.community.mapper" targetProject="src/main/java" type="XMLMAPPER">
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <!--  useActualColumnNames:如果为true，则MBG将使用从数据库元数据返回的列名作为生成的域对象的属性。
+                                   如果为false（默认），则MBG将尝试以驼峰式表示返回的名称。
+                                   默认值为false。-->
+
+        <!-- table标签可以有多个，至少一个，tableName指定表名，可以使用_和%通配符 -->
+        <table tableName="user" domainObjectName="User">
+            <!-- 是否只生成POJO对象 -->
+            <!--<property name="modelOnly" value="false"/>-->
+            <!-- generatedKey用于生成生成主键的方法 -->
+            <!--<generatedKey column="id" sqlStatement="MySql" identity="true"/>-->
+            <!--<domainObjectRenamingRule searchString="^Sm" replaceString=""/>-->
+        </table>
+        <table tableName="question" domainObjectName="Question">
+        </table>
+    </context>
+</generatorConfiguration>
