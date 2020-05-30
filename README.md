@@ -2,9 +2,11 @@
     这是一个问答社区，乌鸦意指无涯，取自学海无涯，在自黑中交流分享，在分享交流中进步。
 ## 参考资料
 
-[Spring文档](https://spring.io/guides)
+[Spring Reference](https://spring.io/guides)
 
-[Spring Web](https://spring.io/guides/gs/serving-web-content/)
+[Spring Web Reference](https://spring.io/guides/gs/serving-web-content/)
+
+[Spring Boot Reference](https://docs.spring.io/spring-boot/docs/2.2.7.RELEASE/reference/htmlsingle/)
 
 [Bootstrap](https://v3.bootcss.com/getting-started/)
 
