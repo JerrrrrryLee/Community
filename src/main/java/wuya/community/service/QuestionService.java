@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import wuya.community.dto.PaginationDTO;
 import wuya.community.exception.CustomizeErrorCode;
 import wuya.community.exception.CustomizeException;
+import wuya.community.mapper.QuestionExtMapper;
 import wuya.community.mapper.QuestionMapper;
 import wuya.community.mapper.UserMapper;
 import wuya.community.model.Question;
@@ -23,6 +24,8 @@ public class QuestionService {
     private UserMapper userMapper;
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    private QuestionExtMapper questionExtMapper;
 
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO pagination = new PaginationDTO();
@@ -86,6 +89,9 @@ public class QuestionService {
         if(question.getId()==null){
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
             questionMapper.insert(question);
         }else{
             Question updateQuestion = new Question();
@@ -101,5 +107,14 @@ public class QuestionService {
             }
 
         }
+    }
+
+    public void incView(Integer id) {
+
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
+
     }
 }

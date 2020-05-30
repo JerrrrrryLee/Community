@@ -21,6 +21,8 @@
 
 Spring Boot、BootStrap、Thymeleaf、Mybatis、Flyway、Mybatis Generator、Git、Maven
 
+## 脚本
+
 ```bash
 mvn flyway:migrate
 mvn -Dmybatis.generator.overwrite=true mybatis-generator:generate
