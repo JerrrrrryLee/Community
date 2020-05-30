@@ -1,5 +1,6 @@
 package wuya.community.service;
 
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import wuya.community.mapper.QuestionMapper;
 import wuya.community.mapper.UserMapper;
 import wuya.community.model.Question;
 import wuya.community.model.QuestionDTO;
+import wuya.community.model.QuestionExample;
 import wuya.community.model.User;
 
 import java.util.ArrayList;
@@ -22,12 +24,12 @@ public class QuestionService {
 
     public PaginationDTO list(Integer page, Integer size) {
         PaginationDTO pagination = new PaginationDTO();
-        Integer totalCount = questionMapper.count();
+        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
         pagination.setPagination(totalCount,page,size);
-        if(page<=0) page=1;
-        if(page > pagination.getPagesNumber()) page=pagination.getPagesNumber();
+        if(page < 1) page =1;
+        if(page>pagination.getTotalPage()) page=pagination.getTotalPage();
         Integer offset = size*(page-1);
-        List<Question> questionList = questionMapper.list(offset,size);
+        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(new QuestionExample(), new RowBounds(offset, size));
         List<QuestionDTO> questions = new ArrayList<>();
         for (Question question:questionList) {
             QuestionDTO questionDTO = new QuestionDTO();
@@ -43,12 +45,16 @@ public class QuestionService {
     public PaginationDTO list(Integer userId, Integer page, Integer size) {
 
         PaginationDTO pagination = new PaginationDTO();
-        Integer totalCount = questionMapper.countByUserId(userId);
+        QuestionExample example = new QuestionExample();
+        example.createCriteria().andCreatorEqualTo(userId);
+        Integer totalCount = (int) questionMapper.countByExample(example);
         pagination.setPagination(totalCount,page,size);
-        if(page<=0) page=1;
-        if(page > pagination.getPagesNumber()) page=pagination.getPagesNumber();
+        if(page < 1) page =1;
+        if(page>pagination.getTotalPage()) page=pagination.getTotalPage();
         Integer offset = size*(page-1);
-        List<Question> questionList = questionMapper.listByUserId(userId,offset,size);
+        QuestionExample example1 = new QuestionExample();
+        example1.createCriteria().andCreatorEqualTo(userId);
+        List<Question> questionList = questionMapper.selectByExampleWithRowbounds(example1,new RowBounds(offset,size));
         List<QuestionDTO> questions = new ArrayList<>();
         for (Question question:questionList) {
             QuestionDTO questionDTO = new QuestionDTO();
@@ -63,7 +69,7 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Integer id) {
-        Question question = questionMapper.getById(id);
+        Question question = questionMapper.selectByPrimaryKey(id);
         QuestionDTO questionDTO = new QuestionDTO();
         BeanUtils.copyProperties(question,questionDTO);
         User user = userMapper.selectByPrimaryKey(question.getCreator());
@@ -75,10 +81,16 @@ public class QuestionService {
         if(question.getId()==null){
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
-            questionMapper.create(question);
+            questionMapper.insert(question);
         }else{
-            question.setGmtModified(System.currentTimeMillis());
-            questionMapper.update(question);
+            Question updateQuestion = new Question();
+            updateQuestion.setGmtModified(System.currentTimeMillis());
+            updateQuestion.setTitle(question.getTitle());
+            updateQuestion.setDescription(question.getDescription());
+            updateQuestion.setTag(question.getTag());
+            QuestionExample example = new QuestionExample();
+            example.createCriteria().andIdEqualTo(question.getId());
+            questionMapper.updateByExampleSelective(updateQuestion, example);
 
         }
     }
