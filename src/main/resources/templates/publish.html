@@ -15,6 +15,7 @@
     <script src="/js/jquery-3.3.1.min.js"></script>
     <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
     <script src="/js/bootstrap.js" type="application/javascript"></script>
+    <script src="/js/community.js" type="application/javascript"></script>
 
 </head>
 <body>
@@ -29,16 +30,38 @@
                     <input type="hidden" name="id" th:value="${id}">
                     <div class="form-group">
                         <label for="title">问题标题（简单扼要）：</label>
-                        <input type="text" class="form-control" name="title" id="title" placeholder="问题标题..." th:value="${title}">
+                        <input type="text" class="form-control" name="title" id="title"
+                               placeholder="问题标题..." th:value="${title}" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label for="description">问题描述（必填，请参照右侧提示）：</label>
-                        <textarea th:text="${description}" class="form-control" name="description" id="description" cols="30"
-                                  rows="10"></textarea>
+                        <textarea th:text="${description}" class="form-control" name="description" id="description"
+                                  cols="30" rows="10" autocomplete="off"></textarea>
                     </div>
                     <div class="form-group">
                         <label for="tag">添加标签：</label>
-                        <input th:value="${tag}" type="text" class="form-control" id="tag" name="tag" placeholder="输入标签，以，隔开">
+                        <input th:value="${tag}" type="text" class="form-control" id="tag" autocomplete="off"
+                               name="tag" placeholder="输入标签，以，隔开" onclick="popupTag()">
+                        <!--标签页-->
+                        <div style="display: none" id="tag-list" class="tag-page">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" th:each="tagSection:${tags}">
+                                    <a th:href="${'#'+tagSection.categoryName}" aria-controls="home" role="tab" data-toggle="tab" th:text="${tagSection.categoryName}"></a>
+                                </li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane" th:id="${tagSection.categoryName}" th:each="tagSection:${tags}">
+                                    <span class="label label-info" th:each="tagSingle:${tagSection.tags}" onclick="selectTag(this)"
+                                          th:data-tag="${tagSingle}" style="margin-left: 10px">
+                                        <span class="glyphicon glyphicon-tags"></span>
+                                        <span th:text="${tagSingle}"></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <span th:if="${error} ne null" class="alert alert-danger" th:text="${error}"></span>
                     <button type="submit" class="btn btn-success btn-publish">发布</button>
