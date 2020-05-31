@@ -27,7 +27,7 @@ public class CommentController {
 
     @ResponseBody
     @RequestMapping(value = "/comment",method = RequestMethod.POST)
-    public Object psot(@RequestBody CommentCreateDTO commentCreateDTO,
+    public Object post(@RequestBody CommentCreateDTO commentCreateDTO,
                        HttpServletRequest request){
         User user = (User)request.getSession().getAttribute("user");
         if(user==null){
@@ -44,6 +44,7 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
+        comment.setCommentCount(0);
         commentService.insert(comment);
         return ResultDTO.okOf();
     }

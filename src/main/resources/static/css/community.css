@@ -65,3 +65,8 @@ body{
     display: none;
     margin-top: 10px;
 }
+.tag-tab{
+    white-space: normal;
+    margin: 5px 5px;
+    display: inline-block;
+}
