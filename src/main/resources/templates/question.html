@@ -18,95 +18,140 @@
     <script src="/js/community.js" type="application/javascript"></script>
 </head>
 <body>
-    <div th:replace="~{navigationbar::topnavbar}"></div>
-    <div class="main">
-        <div class="container-fluid main">
-            <div class="row">
-                <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9" >
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <h4></span><span th:text="${questionDTO.title}"></span></h4>
-                        <span class="text-index">
+<div th:replace="~{navigationbar::topnavbar}"></div>
+<div class="main">
+    <div class="container-fluid main">
+        <div class="row" style="margin-top: 20px">
+            <div class="col-12 col-sm-12 col-md-12 col-lg-9 col-xl-9">
+                <!--问题展示部分-->
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <h4></span><span th:text="${questionDTO.title}"></span></h4>
+                    <span class="text-index">
                             作者：<span th:text="${questionDTO.user.name}"></span> |
-                            发布时间：<span th:text="${#dates.format(questionDTO.getGmtCreate(), 'yyyy-MM-dd HH:mm')}"></span> |
+                            发布时间：<span
+                            th:text="${#dates.format(questionDTO.getGmtCreate(), 'yyyy-MM-dd HH:mm')}"></span> |
                             浏览数：<span th:text="${questionDTO.getViewCount()}"></span>
                         </span>
-                        <hr>
-                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" th:text="${questionDTO.description}"></div>
-                        <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <a th:href="@{'/publish/'+${questionDTO.id}}" th:if="${session.user!=null && session.user.id==questionDTO.creator}">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                            编辑
-                        </a>
-                    </div>
                     <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <h4><span th:text="${questionDTO.commentCount}"></span>个回复</h4>
-                        <hr>
-                        <div th:each="comment:${comments}">
-                            <!--评论展示-->
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" >
-                                <div class="media" >
-                                    <div class="media-left media-middle">
-                                        <img class="media-object img-circle" th:src="${comment.getUser().getAvatarUrl()}">
-                                    </div>
-                                    <div class="media-body">
-                                        <h5 class="media-heading">
-                                            <span class="mt-0 mb-1" th:text="${comment.user.name}"></span>
-                                        </h5>
-                                        <div th:text="${comment.content}"></div>
-                                    </div>
+                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12"
+                         th:text="${questionDTO.description}"></div>
+                    <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <a class="community-menu" th:href="@{'/publish/'+${questionDTO.id}}"
+                       th:if="${session.user!=null && session.user.id==questionDTO.creator}">
+                        <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                        编辑
+                    </a>
+                    <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                </div>
+                <!--评论部分-->
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <h4><span th:text="${questionDTO.commentCount}"></span>个回复</h4>
+                    <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <div th:each="comment:${comments}">
+                        <!--评论展示-->
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="media">
+                                <div class="media-left media-middle">
+                                    <img class="media-object img-circle" th:src="${comment.getUser().getAvatarUrl()}">
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="media-heading">
+                                        <span class="mt-0 mb-1" th:text="${comment.user.name}"></span>
+                                    </h5>
+                                    <div th:text="${comment.content}"></div>
                                 </div>
                             </div>
-                            <!--功能条-->
-                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 5px">
-                            <span>
-                                <a style="margin-left: 50px"  href=""><span class="glyphicon glyphicon-thumbs-up text-index icon" aria-hidden="true">点赞</span></a>
-                                <a style="margin-left: 15px"  href=""><span class="glyphicon glyphicon-comment text-index icon" aria-hidden="true">评论</span></a>
-                                <span class="pull-right text-index" th:text="${#dates.format(comment.getGmtCreate(), 'yyyy-MM-dd')}"></span>
-                            </span>
-                            </div>
-                            <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         </div>
-                    </div>
-
-                    <!--评论输入部分-->
-                    <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" id="comment_section">
-                        <div class="media" >
-                            <div class="media-left media-middle">
-                                <img class="media-object img-rounded" th:src="${questionDTO.getUser().getAvatarUrl()}">
-                            </div>
-                            <div class="media-body">
-                                <h5 ><span class="mt-0 mb-1" th:text="${questionDTO.user.name}"></span></h5>
+                        <!--功能条-->
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 5px">
+                                <span>
+                                    <span class="glyphicon glyphicon-thumbs-up text-index icon"
+                                          style="margin-left: 50px">点赞</span>
+                                    <span class="glyphicon glyphicon-comment text-index icon" style="margin-left: 15px"
+                                          th:data-id="${comment.id}" onclick="collapseComments(this)">
+                                        评论
+                                    </span>
+                                    <span class="pull-right text-index"
+                                          th:text="${#dates.format(comment.getGmtCreate(), 'yyyy-MM-dd')}"></span>
+                                </span>
+                        </div>
+                        <!--二级评论-->
+                        <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12 collapse second-comments"
+                                 th:id="${'comment-' + comment.id}">
+                                <div th:each="comment:${comments}">
+                                    <!--评论展示-->
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                        <div class="media">
+                                            <div class="media-left media-middle">
+                                                <img class="media-object img-circle"
+                                                     th:src="${comment.getUser().getAvatarUrl()}">
+                                            </div>
+                                            <div class="media-body">
+                                                <h5 class="media-heading">
+                                                    <span class="mt-0 mb-1" th:text="${comment.user.name}"></span>
+                                                </h5>
+                                                <div th:text="${comment.content}"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--功能条-->
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" style="margin-top: 5px">
+                                    <span>
+                                        <span class="pull-right text-index"
+                                              th:text="${#dates.format(comment.getGmtCreate(), 'yyyy-MM-dd')}"></span>
+                                    </span>
+                                    </div>
+                                    <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                </div>
+                                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                                    <input type="text" class="form-control" placeholder="评论一下...">
+                                    <button type="button" class="btn btn-success pull-right" style="margin: 10px 0">评论</button>
+                                </div>
                             </div>
                         </div>
-                        <input type="hidden" id="question_id" th:value="${questionDTO.id}">
-                        <textarea class="form-control comment" rows="6" id="comment_content"></textarea>
-                        <button type="submit" class="btn btn-success comment-btn" onclick="post()">回复</button>
+                        <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                     </div>
                 </div>
-                <!--右侧-->
-                <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3" >
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" >
-                        <h4>发起人</h4>
-                        <div class="media" >
-                            <div class="media-left media-middle">
-                                <img class="media-object img-circle" th:src="${questionDTO.getUser().getAvatarUrl()}">
-                            </div>
-                            <div class="media-body">
-                                <h5 class="media-heading">
-                                    <span class="mt-0 mb-1" th:text="${questionDTO.user.name}"></span>
-                                </h5>
-                            </div>
+
+                <!--评论输入部分-->
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" id="comment_section">
+                    <h4>输入评论</h4>
+                    <div class="media">
+                        <div class="media-left media-middle">
+                            <img class="media-object img-rounded" th:src="${questionDTO.getUser().getAvatarUrl()}">
+                        </div>
+                        <div class="media-body">
+                            <h5><span class="mt-0 mb-1" th:text="${questionDTO.user.name}"></span></h5>
                         </div>
                     </div>
-                    <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12" >
-                        <h4>相关问题</h4>
+                    <input type="hidden" id="question_id" th:value="${questionDTO.id}">
+                    <textarea class="form-control comment" rows="6" id="comment_content"></textarea>
+                    <button type="submit" class="btn btn-success comment-btn" onclick="post()">回复</button>
+                </div>
+            </div>
+            <!--右侧-->
+            <div class="col-12 col-sm-12 col-md-12 col-lg-3 col-xl-3">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <h4>发起人</h4>
+                    <div class="media">
+                        <div class="media-left media-middle">
+                            <img class="media-object img-circle" th:src="${questionDTO.getUser().getAvatarUrl()}">
+                        </div>
+                        <div class="media-body">
+                            <h5 class="media-heading">
+                                <span class="mt-0 mb-1" th:text="${questionDTO.user.name}"></span>
+                            </h5>
+                        </div>
                     </div>
+                </div>
+                <hr class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                    <h4>相关问题</h4>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>
