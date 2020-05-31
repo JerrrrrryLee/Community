@@ -8,6 +8,7 @@ import wuya.community.dto.CommentDTO;
 import wuya.community.enums.CommentTypeEnum;
 import wuya.community.exception.CustomizeErrorCode;
 import wuya.community.exception.CustomizeException;
+import wuya.community.mapper.CommentExtMapper;
 import wuya.community.mapper.CommentMapper;
 import wuya.community.mapper.QuestionExtMapper;
 import wuya.community.mapper.QuestionMapper;
@@ -34,6 +35,8 @@ public class CommentService {
     private QuestionExtMapper questionExtMapper;
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private CommentExtMapper commentExtMapper;
 
 
     @Transactional
@@ -51,6 +54,10 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
             commentMapper.insert(comment);
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(parentComment);
         }else{
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -65,10 +72,10 @@ public class CommentService {
         }
     }
 
-    public List<CommentDTO> listByQuestionId(Long id) {
+    public List<CommentDTO> listByTargetId(Long id, CommentTypeEnum type) {
         CommentExample example = new CommentExample();
         example.createCriteria().andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(type.getType());
         example.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(example);
         if(comments.size()==0){
