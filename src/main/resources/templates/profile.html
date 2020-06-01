@@ -47,8 +47,10 @@
                     <div class="media" th:each="notification:${pagination.datas}" th:if="${section=='reply'}">
                         <div class="media-body">
                             <h5 class="mt-0 mb-1">
-                                <a th:href="@{'/reply/'+${notification.id}}"
-                                   th:text="${notification.notifierName+' '+notification.type+' '+notification.outerTitle}"></a>
+                                <span th:text="${notification.notifierName+' '+notification.typeName+' '}"></span>
+                                <a th:href="@{'/notification/'+ ${notification.id}}"
+                                   th:text="${notification.outerTitle}"></a>
+                                <span class="label label-danger" th:if="${notification.status}==0">未读</span>
                             </h5>
                         </div>
                     </div>

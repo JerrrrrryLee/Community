@@ -72,7 +72,7 @@ public class CommentService {
             Notification notification = new Notification();
             notification.setGmtCreate(System.currentTimeMillis());
             notification.setType(NotificationTypeEnum.REPLY_COMMENT.getType());
-            notification.setOuterId(comment.getParentId());
+            notification.setOuterId(question.getId());
             notification.setNotifier(comment.getCommentator());
             notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
             notification.setReceiver(dbComment.getCommentator());
@@ -94,7 +94,7 @@ public class CommentService {
             notification.setGmtCreate(System.currentTimeMillis());
             notification.setType(NotificationTypeEnum.REPLY_QUESTION.getType());
 //            notification.setOuterId(question.getId());
-            notification.setOuterId(comment.getParentId());
+            notification.setOuterId(question.getId());
             notification.setNotifier(comment.getCommentator());
             notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
             notification.setReceiver(question.getCreator());
