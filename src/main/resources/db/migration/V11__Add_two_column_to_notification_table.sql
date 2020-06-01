@@ -1,0 +1,2 @@
+ALTER TABLE NOTIFICATION ADD notifier_name varchar(100) NULL;
+ALTER TABLE NOTIFICATION ADD outer_title varchar(256) NULL;

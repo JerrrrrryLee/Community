@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import wuya.community.dto.PaginationDTO;
 import wuya.community.model.User;
+import wuya.community.service.NotificationService;
 import wuya.community.service.QuestionService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +18,9 @@ public class ProfileController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private NotificationService notificationService;
     @GetMapping("/profile/{action}")
     public String profile(@RequestParam(value = "page",defaultValue = "1") Integer page,
                           @RequestParam(value = "size",defaultValue = "5") Integer size,
@@ -30,14 +34,17 @@ public class ProfileController {
         if("question".equals(action)){
             model.addAttribute("section","question");
             model.addAttribute("sectionName","我的提问");
+            PaginationDTO paginationDTO = questionService.list(user.getId(),page,size);
+            model.addAttribute("pagination",paginationDTO);
         }
         if("reply".equals(action)){
             model.addAttribute("section","reply");
             model.addAttribute("sectionName","我的回复");
+            PaginationDTO paginationDTO = notificationService.list(user.getId(),page,size);
+            model.addAttribute("pagination",paginationDTO);
+            Long unreadCount = notificationService.unreadCount(user.getId());
+            model.addAttribute("unreadCount",unreadCount);
         }
-        PaginationDTO paginationDTO = questionService.list(user.getId(),page,size);
-        model.addAttribute("pagination",paginationDTO);
         return "profile";
     }
-
 }

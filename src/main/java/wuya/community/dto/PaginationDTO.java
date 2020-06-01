@@ -1,13 +1,13 @@
 package wuya.community.dto;
 
 import lombok.Data;
-import wuya.community.model.QuestionDTO;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PaginationDTO {
-    private List<QuestionDTO> questions;
+public class PaginationDTO<T> {
+    private List<T> datas;
     private boolean showPrevious;
     private boolean showFirstPage;
     private boolean showNext;
@@ -16,15 +16,11 @@ public class PaginationDTO {
     private List<Integer> pages = new ArrayList<>();
     private Integer totalPage;
 
-
-
     public void setPagination(Integer totalCount, Integer page, Integer size) {
-
         totalPage = (totalCount%size==0)?(totalCount/size):(totalCount/size+1);
         if(page < 1) page =1;
         if(page>totalPage) page=totalPage;
         this.page=page;
-
         pages.add(page);
         for (int i = 1; i <= 3; i++) {
             if(page-i>0){

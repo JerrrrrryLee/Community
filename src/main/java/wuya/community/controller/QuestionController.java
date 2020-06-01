@@ -30,6 +30,5 @@ public class QuestionController {
         model.addAttribute("relatedQuestionDTOs",relatedQuestionDTOs);
         model.addAttribute("comments",comments);
         return "question";
-
     }
 }

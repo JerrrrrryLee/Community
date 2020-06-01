@@ -6,19 +6,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wuya.community.dto.CommentDTO;
 import wuya.community.enums.CommentTypeEnum;
+import wuya.community.enums.NotificationStatusEnum;
+import wuya.community.enums.NotificationTypeEnum;
 import wuya.community.exception.CustomizeErrorCode;
 import wuya.community.exception.CustomizeException;
 import wuya.community.mapper.CommentExtMapper;
 import wuya.community.mapper.CommentMapper;
+import wuya.community.mapper.NotificationMapper;
 import wuya.community.mapper.QuestionExtMapper;
 import wuya.community.mapper.QuestionMapper;
 import wuya.community.mapper.UserMapper;
 import wuya.community.model.Comment;
 import wuya.community.model.CommentExample;
+import wuya.community.model.Notification;
 import wuya.community.model.Question;
 import wuya.community.model.User;
 import wuya.community.model.UserExample;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -37,10 +40,12 @@ public class CommentService {
     private UserMapper userMapper;
     @Autowired
     private CommentExtMapper commentExtMapper;
+    @Autowired
+    private NotificationMapper notificationMapper;
 
 
     @Transactional
-    public void insert(Comment comment) {
+    public void insert(Comment comment, User commentator) {
         if(comment.getParentId()==null || comment.getParentId()==0){
             throw new CustomizeException(CustomizeErrorCode.TARGET_PATH_NOT_FOUND);
         }
@@ -53,22 +58,49 @@ public class CommentService {
             if(dbComment == null){
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if(question==null){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+            //评论入库
             commentMapper.insert(comment);
             Comment parentComment = new Comment();
             parentComment.setId(comment.getParentId());
             parentComment.setCommentCount(1);
             commentExtMapper.incCommentCount(parentComment);
+            //通知入库
+            Notification notification = new Notification();
+            notification.setGmtCreate(System.currentTimeMillis());
+            notification.setType(NotificationTypeEnum.REPLY_COMMENT.getType());
+            notification.setOuterId(comment.getParentId());
+            notification.setNotifier(comment.getCommentator());
+            notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+            notification.setReceiver(dbComment.getCommentator());
+            notification.setNotifierName(commentator.getName());
+            notification.setOuterTitle(question.getTitle());
+            notificationMapper.insert(notification);
         }else{
             //回复问题
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
             if(question==null){
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
+            //评论入库
             commentMapper.insert(comment);
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
-            //有点疑问
-
+            //通知入库
+            Notification notification = new Notification();
+            notification.setGmtCreate(System.currentTimeMillis());
+            notification.setType(NotificationTypeEnum.REPLY_QUESTION.getType());
+//            notification.setOuterId(question.getId());
+            notification.setOuterId(comment.getParentId());
+            notification.setNotifier(comment.getCommentator());
+            notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+            notification.setReceiver(question.getCreator());
+            notification.setNotifierName(commentator.getName());
+            notification.setOuterTitle(question.getTitle());
+            notificationMapper.insert(notification);
         }
     }
 

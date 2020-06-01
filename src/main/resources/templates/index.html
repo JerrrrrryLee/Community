@@ -35,7 +35,7 @@
                 <h2><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>发现</h2>
                 <hr>
                 <!--问题列表-->
-                <div class="media" th:each="question:${pagination.questions}">
+                <div class="media" th:each="question:${pagination.datas}">
                     <div class="media-left media-middle">
                         <a href="#">
                             <img class="media-object" th:src="${question.getUser().getAvatarUrl()}">
